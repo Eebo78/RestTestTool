@@ -13,17 +13,16 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace Epim.RestTest
+namespace Epim.RestTest.Views
 {
     /// <summary>
-    /// Interaction logic for MainWindow.xaml
+    /// Interaction logic for AddTestDataView.xaml
     /// </summary>
-    public partial class MainWindow : Window
+    public partial class AddTestDataView : UserControl
     {
-        public MainWindow()
+        public AddTestDataView()
         {
             InitializeComponent();
-
         }
     }
 }

@@ -1,0 +1,33 @@
+﻿<UserControl x:Class="Epim.RestTest.Views.PerformanceView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             mc:Ignorable="d" 
+             d:DesignHeight="300" d:DesignWidth="300"
+             DataContext="{Binding Performance, Source={StaticResource Locator}}">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+        
+        <StackPanel Orientation="Horizontal" Grid.Row="0">
+            <TextBlock Text="Concurrent Clients: "></TextBlock>
+            <TextBox Text="{Binding ConcurrentClients, Mode=TwoWay, FallbackValue=100}" />
+            <Button Content="Start Test" Command="{Binding StartTestCommand}"></Button>
+        </StackPanel>
+
+        <DataGrid Grid.Row="2" AutoGenerateColumns="false" ItemsSource="{Binding Statistics}">
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="Status"  Binding="{Binding StatusCode}"/>
+                <DataGridTextColumn Header="Starttime"  Binding="{Binding StartOfRequest}"/>
+                <DataGridTextColumn Header="Endtime"  Binding="{Binding EndOfRequest}"/>
+                <DataGridTextColumn Header="Time"  Binding="{Binding Time}"/>
+                <DataGridTextColumn Header="Method"  Binding="{Binding Method}"/>
+                <DataGridTextColumn Header="Endpoint"  Binding="{Binding EndPoint}"/>
+            </DataGrid.Columns>
+        </DataGrid>
+    </Grid>
+</UserControl>
