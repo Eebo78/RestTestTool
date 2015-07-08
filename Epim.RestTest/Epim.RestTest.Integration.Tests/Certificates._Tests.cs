@@ -32,6 +32,8 @@ namespace Epim.RestTest.Integration.Tests
         [TestMethod]
         public void SerializeContainerTest()
         {
+            var loc = System.Reflection.Assembly.GetExecutingAssembly().Location;
+            var path = Path.GetDirectoryName(loc);
             var container = new Container
             {
                 Id = "PerfTest_Epim_1",
@@ -40,7 +42,7 @@ namespace Epim.RestTest.Integration.Tests
             };
 
             var vm = new TestDataViewModel();
-            var body = vm.Serialize(container);
+           
 
             Assert.IsTrue(true);
         }

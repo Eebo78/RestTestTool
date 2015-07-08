@@ -15,9 +15,12 @@ namespace Epim.RestClient
         public string EndPoint { get; set; }
         public HttpVerb Method { get; set; }
         public string ContentType { get; set; }
+        public string ClientId { get; set; }
         public string PostData { get; set; }
         public X509Certificate2 Certificate { get; set; }
 
+
+        private int _requestNo;
         public Client(X509Certificate2 certificate)
         {
             EndPoint = "";
@@ -63,6 +66,7 @@ namespace Epim.RestClient
         {
             var request = (HttpWebRequest)WebRequest.Create(EndPoint + parameters);
 
+            
             request.Method = Method.ToString();
             request.ContentLength = 0;
             request.ContentType = ContentType;
@@ -79,6 +83,8 @@ namespace Epim.RestClient
                     writeStream.Write(bytes, 0, bytes.Length);
                 }
             }
+
+            _requestNo ++;
             var startTime = DateTime.Now;
             try
             {
@@ -87,13 +93,7 @@ namespace Epim.RestClient
                     var endTime = DateTime.Now;
 
                     var responseValue = string.Empty;
-
-                    //if (response.StatusCode != HttpStatusCode.OK)
-                    //{
-                    //    var message = String.Format("Request failed. Received HTTP {0}", response.StatusCode);
-                    //    throw new ApplicationException(message);
-                    //}
-
+                    
                     // grab the response
                     using (var responseStream = response.GetResponseStream())
                     {
@@ -108,11 +108,13 @@ namespace Epim.RestClient
                     {
                         EndPoint = EndPoint,
                         Method = Method,
-                        StatusCode = response.StatusCode,
+                        StatusCode = response.StatusCode.ToString(),
                         Time = (int) Math.Ceiling((endTime - startTime).TotalMilliseconds),
                         Result = responseValue,
                         StartOfRequest = startTime,
-                        EndOfRequest = endTime
+                        EndOfRequest = endTime,
+                        Client = ClientId,
+                        RequestNo = _requestNo
                     };
                 }
             }
@@ -127,22 +129,27 @@ namespace Epim.RestClient
                         return new ElhResponse
                         {
                             EndPoint = EndPoint,
-                            Method = Method,
-                            StatusCode = response.StatusCode, 
+                            Method = Method, 
+                            StatusCode =  response.StatusCode.ToString(), 
                             StartOfRequest = startTime,
                             Time = (int)Math.Ceiling((endTime - startTime).TotalMilliseconds),
-                            Result = wex.Message
+                            Result = wex.Message,
+                            Client = ClientId,
+                            RequestNo = _requestNo
                         };
                     }
                 }
                 return new ElhResponse
                 {
                     EndPoint = EndPoint,
-                    StatusCode = HttpStatusCode.InternalServerError,
+                    StatusCode = "Error",
+                    
                     Method = Method, 
                     StartOfRequest = startTime,
                     Time = (int)Math.Ceiling((endTime - startTime).TotalMilliseconds),
-                    Result = "Unknown error: " + wex.Message
+                    Result = "Unknown error: " + wex.Message,
+                    Client = ClientId,
+                    RequestNo = _requestNo
                 };
             }
             catch (Exception ex)
@@ -152,7 +159,8 @@ namespace Epim.RestClient
                 {
                     EndPoint = EndPoint,
                     Method = Method,
-                    StatusCode = HttpStatusCode.InternalServerError,
+                    StatusCode = "Error",
+                    
                     StartOfRequest = startTime,
                     Time = (int)Math.Ceiling((DateTime.Now - startTime).TotalMilliseconds),
                     Result = "Unknown error: " + ex.Message

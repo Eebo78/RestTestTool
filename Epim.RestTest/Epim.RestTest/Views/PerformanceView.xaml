@@ -9,25 +9,82 @@
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
-        
-        <StackPanel Orientation="Horizontal" Grid.Row="0">
-            <TextBlock Text="Concurrent Clients: "></TextBlock>
-            <TextBox Text="{Binding ConcurrentClients, Mode=TwoWay, FallbackValue=100}" />
-            <Button Content="Start Test" Command="{Binding StartTestCommand}"></Button>
+        <StackPanel Grid.Row="0" Orientation="Horizontal">
+            <Label Content="Select organization:"></Label>
+            <ComboBox ItemsSource="{Binding Organizations, Mode=OneTime}" SelectedItem="{Binding SelectedOrganization, Mode=TwoWay}" Width="150">
+                <ComboBox.ItemTemplate>
+                    <DataTemplate>
+                        <TextBlock Text="{Binding Name}"></TextBlock>
+                    </DataTemplate>
+                </ComboBox.ItemTemplate>
+            </ComboBox>
+            <TextBlock Text="Total Containers: " />
+            <TextBlock Text="{Binding TotalContainers, FallbackValue=14000}"></TextBlock>
         </StackPanel>
+        <Grid Grid.Row="1">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+            
+            <Grid Grid.Row="0">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
 
-        <DataGrid Grid.Row="2" AutoGenerateColumns="false" ItemsSource="{Binding Statistics}">
-            <DataGrid.Columns>
-                <DataGridTextColumn Header="Status"  Binding="{Binding StatusCode}"/>
-                <DataGridTextColumn Header="Starttime"  Binding="{Binding StartOfRequest}"/>
-                <DataGridTextColumn Header="Endtime"  Binding="{Binding EndOfRequest}"/>
-                <DataGridTextColumn Header="Time"  Binding="{Binding Time}"/>
-                <DataGridTextColumn Header="Method"  Binding="{Binding Method}"/>
-                <DataGridTextColumn Header="Endpoint"  Binding="{Binding EndPoint}"/>
-            </DataGrid.Columns>
-        </DataGrid>
+                <TextBlock Text="Concurrent Clients: " Grid.Row="0" Grid.Column="0"/>
+                <TextBox Text="{Binding ConcurrentClients, Mode=TwoWay, FallbackValue=100}" Grid.Row="0" Grid.Column="1"/>
+
+                <TextBlock Text="No of Reuests: " Grid.Row="1" Grid.Column="0"/>
+                <TextBox Text="{Binding NoOfRequests, Mode=TwoWay, FallbackValue=20}" Grid.Row="1" Grid.Column="1"/>
+
+                <TextBlock Text="Csv filename: " Grid.Row="2" Grid.Column="0"/>
+                <TextBox Text="{Binding CustomCsvFilename, Mode=TwoWay, FallbackValue=dump.csv}" Grid.Row="2" Grid.Column="1"/>
+
+                <Grid Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="2" >
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="75" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+                    <ComboBox ItemsSource="{Binding Methods, Mode=OneTime}" SelectedItem="{Binding SelectedMethod, Mode=TwoWay}" Grid.Column="0" HorizontalAlignment="Stretch"/>
+                    <TextBox HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch" Text="{Binding EndPoint, Mode=TwoWay}" Grid.Column="1"/>
+                </Grid>
+                
+                <Grid Grid.Column="0" Grid.Row="4" Grid.ColumnSpan="2">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition />
+                        <ColumnDefinition />
+                        <ColumnDefinition />
+                    </Grid.ColumnDefinitions>
+                    <Button Content="Start Test" Command="{Binding StartTestCommand}" Grid.Column="0"></Button>
+                    <Button Content="Stop Test" Command="{Binding StopTestsCommand}" Grid.Column="1"></Button>
+                    <Button Content="Dump to CSV" Command="{Binding WriteToCsvCommand}" Grid.Column="2"></Button>
+                </Grid>
+            </Grid>
+            <DataGrid Grid.Row="2" AutoGenerateColumns="false" ItemsSource="{Binding Statistics}">
+                <DataGrid.Columns>
+                    <DataGridTextColumn Header="Client"  Binding="{Binding Client}"/>
+                    <DataGridTextColumn Header="#"  Binding="{Binding RequestNo}"/>
+                    <DataGridTextColumn Header="Status"  Binding="{Binding StatusCode}"/>
+                    
+                    <DataGridTextColumn Header="Starttime"  Binding="{Binding StartOfRequest}"/>
+                    <DataGridTextColumn Header="Endtime"  Binding="{Binding EndOfRequest}"/>
+                    <DataGridTextColumn Header="Time"  Binding="{Binding Time}"/>
+                    <DataGridTextColumn Header="Method"  Binding="{Binding Method}"/>
+                    <DataGridTextColumn Header="Endpoint"  Binding="{Binding EndPoint}"/>
+                </DataGrid.Columns>
+            </DataGrid>
+        </Grid>
     </Grid>
 </UserControl>

@@ -73,6 +73,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Helpers\XmlHelper.cs" />
     <Compile Include="Models\CCU.cs" />
     <Compile Include="Models\ContainerHire.cs" />
     <Compile Include="Models\Organization.cs" />
